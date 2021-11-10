@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "pg-k8s-backup.shortname" . }}-postgres-configmap
+  labels:
+    {{- include "pg-k8s-backup.labels" . | nindent 4 }}
+data:
+  PGHOST: {{ .Values.postgres.host.serverurl | quote }}
+  PGPORT: {{ .Values.postgres.host.port | quote }}
+  PGDATABASE: {{ .Values.postgres.database | quote }}

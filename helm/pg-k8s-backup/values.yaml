@@ -1,0 +1,42 @@
+# Default values for pg-k8s-backup.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: hiroshui/pg_backup
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "0.0.1"
+
+# pull-secret needs to be deployed to the same namespace before - only 1 supported now
+imagePullSecret:
+  enabled: false
+  name: registry-secret
+
+nameOverride: ""
+fullnameOverride: ""
+
+postgres:
+  host:
+    serverurl: localhost #replace by server
+    port: 5432 #replace by port of postgres
+  database: postgres #replace by db-name
+  creds:
+    username: postgres #replace by username
+    password: postgres #replace by password
+
+cronjob:
+  restartPolicy: OnFailure
+  schedule: "0 */12 * * *"
+
+#settings for pv and pvc
+persistence:
+  enabled: true
+  existingClaim: pg-backup-pv
+  storageClass:
+    accessModes:
+    - ReadWriteOnce
+    enabled: true
+    name: default
+  baseSize: 10Gi

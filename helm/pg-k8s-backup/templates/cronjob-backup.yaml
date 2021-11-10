@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ template "pg-k8s-backup.shortname" .}}-backup-job
+  labels:
+    {{- include "pg-k8s-backup.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.cronjob.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: {{ .Values.cronjob.restartPolicy }}
+          containers:
+          - name: pgsql-backup
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            envFrom:
+            - configMapRef:
+                name: {{ template "pg-k8s-backup.shortname" . }}-postgres-configmap
+            - secretRef:
+                name: {{ template "pg-k8s-backup.shortname" .}}-postgres-secret
+            volumeMounts:
+            - mountPath: "/pg_backup"
+              name: backup-volume
+          {{- if .Values.imagePullSecret.enabled }}
+            imagePullSecrets:
+            - name: {{ .Values.imagePullSecret.name }}
+          {{- end }}
+          volumes:
+            - name: backup-volume
+              persistentVolumeClaim:
+                claimName: {{ .Values.persistence.existingClaim }}
