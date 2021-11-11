@@ -7,7 +7,7 @@ replicaCount: 1
 image:
   repository: hiroshui/pg_backup
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "0.0.1"
+  tag: "0.0.2"
 
 # pull-secret needs to be deployed to the same namespace before - only 1 supported now
 imagePullSecret:
