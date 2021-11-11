@@ -1,4 +1,4 @@
-DUMP_FILE_NAME="backupOn`date +%Y-%m-%d-%H-%M`.dump"
+DUMP_FILE_NAME="${PGDATABASE}-backupOn`date +%Y-%m-%d-%H-%M`.dump"
 echo "Creating dump: ${DUMP_FILE_NAME}"
 
 if [[ ! -d ${BACKUP_DIR} ]]; then
